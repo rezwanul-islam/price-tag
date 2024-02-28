@@ -25,6 +25,7 @@
     <select id="unit">
         <option value="gm">gm</option>
         <option value="kg">kg</option>
+        <option value="ml">ml</option>
         <option value="ltr">ltr</option>
         <option value="tk">tk</option>
     </select><br><br>
@@ -53,25 +54,29 @@
 
             // Calculate price per kg
             let pricePerUnit;
+            let compareUnit;
+
             if (unit === 'kg') {
-                pricePerUnit = (packetPrice / packetSize).toFixed(2);
+                pricePerUnit = (packetPrice / packetSize);
+                compareUnit = 'kg'
             } else if (unit === 'gm') {
-                pricePerUnit = ((packetPrice / packetSize) * 1000).toFixed(2);
+                pricePerUnit = ((packetPrice / packetSize) * 1000);
+                compareUnit = 'kg'
+            } else if (unit === 'ml') {
+                pricePerUnit = ((packetPrice / packetSize) * 1000);
+                compareUnit = 'ltr'
             } else if (unit === 'ltr') {
-                pricePerUnit = (packetPrice / packetSize).toFixed(2);
+                pricePerUnit = (packetPrice / packetSize);
+                compareUnit = 'ltr'
             } else if (unit === 'tk') {
-                pricePerUnit = (packetPrice / packetSize).toFixed(2);
+                pricePerUnit = (packetPrice / packetSize);
+                compareUnit = 'tk'
             }
 
-            let pricePerUnit_2;
-            if (unit === 'kg' || unit === 'gm') {
-                pricePerUnit_2 = pricePerUnit + "/kg";
-            } else if (unit === 'ltr') {
-                pricePerUnit_2 = pricePerUnit + "/ltr";
-            } else if (unit === 'tk') {
-                pricePerUnit_2 = pricePerUnit + "/tk";
-            }
+            let pricePerUnitWithCompareUnit = pricePerUnit.toFixed(2) + "/" + compareUnit;           
+            let packetPriceFix = packetPrice.toFixed(2);
 
+            console.log(packetPrice.toFixed(2));
 
             // Store product information in array
             products.push({
@@ -79,8 +84,8 @@
                 productNameEst: productNameEst,
                 brandName: brandName,
                 packetSize: packetSizeWithUnit,
-                packetPrice: packetPrice,
-                pricePerUnit: pricePerUnit_2
+                packetPrice: packetPriceFix,
+                pricePerUnit: pricePerUnitWithCompareUnit
             });
 
             // Display product entry
@@ -91,9 +96,9 @@
                                         <div class="brand-name">${brandName}</div>
                                         <div class="product-name">${productName}</div>
                                         <div class="product-name">${productNameEst}</div>                                                
-                                        <div class="price-details">€${packetPrice}</div>
+                                        <div class="price-details">€${packetPriceFix}</div>
                                         <div class="pack-details">${packetSizeWithUnit}</div>
-                                        <div class="price-per-unit">€${pricePerUnit_2}</div>
+                                        <div class="price-per-unit">€${pricePerUnitWithCompareUnit}</div>
                                     </div>`;
 
             // Append product entry to product list
