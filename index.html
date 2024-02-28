@@ -1,43 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Price Labels</title>    
+    <title>Product Price Labels</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial;
+        }
+
+        /* Style the tab */
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+
+        /* Style the buttons inside the tab */
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+        }
+
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #ddd;
+        }
+
+        /* Create an active/current tablink class */
+        .tab button.active {
+            background-color: #ccc;
+        }
+
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+    </style>
 </head>
 
 <body>
-    <h2>Price Labels For Shelves</h2>
 
-    <label for="brandName">Brand Name:</label>
-    <input type="text" id="brandName"><br><br>
+    <h2>Price Tag</h2>
+    <p>Enter product details and print</p>
 
-    <label for="productName">Product Name (Line 1):</label>
-    <input type="text" id="productName"><br><br>
+    <div class="tab">
+        <button class="tablinks" onclick="openCity(event, 'priceTag')">Price Tag</button>
+        <button class="tablinks" onclick="openCity(event, 'manageBrand')">Manage Brand Name</button>
+        <button class="tablinks" onclick="openCity(event, 'manageProduct')">Manage Product</button>
+    </div>
 
-    <label for="productNameEst">Product Name (Line 2):</label>
-    <input type="text" id="productNameEst"><br><br>
+    <div id="priceTag" class="tabcontent">
+        <h2>Price Labels For Shelves</h2>
 
-    <label for="packetSize">Packet Size:</label>
-    <input type="number" id="packetSize">
-    <select id="unit">
-        <option value="gm">gm</option>
-        <option value="kg">kg</option>
-        <option value="ml">ml</option>
-        <option value="ltr">ltr</option>
-        <option value="tk">tk</option>
-    </select><br><br>
+        <label for="brandName">Brand Name:</label>
+        <input type="text" id="brandName"><br><br>
 
-    <label for="packetPrice">Packet Price:</label>
-    <input type="number" id="packetPrice"><br><br>
+        <label for="productName">Product Name (Line 1):</label>
+        <input type="text" id="productName"><br><br>
 
-    <button onclick="saveProduct()">Save Product</button>
-    <button onclick="printLabels()">Print Labels</button>
-    <br><br>
+        <label for="productNameEst">Product Name (Line 2):</label>
+        <input type="text" id="productNameEst"><br><br>
 
-    <div class="container" id="productList"></div>
+        <label for="packetSize">Packet Size:</label>
+        <input type="number" id="packetSize">
+        <select id="unit">
+            <option value="gm">gm</option>
+            <option value="kg">kg</option>
+            <option value="ml">ml</option>
+            <option value="ltr">ltr</option>
+            <option value="tk">tk</option>
+        </select><br><br>
+
+        <label for="packetPrice">Packet Price:</label>
+        <input type="number" id="packetPrice"><br><br>
+
+        <button onclick="saveProduct()">Save Product</button>
+        <button onclick="printLabels()">Print Labels</button>
+        <br><br>
+
+        <div class="container" id="productList"></div>
+    </div>
+
+    <div id="manageBrand" class="tabcontent">
+        <h3>Brand name</h3>
+        <p>Coming soon ..</p>
+    </div>
+
+    <div id="manageProduct" class="tabcontent">
+        <h3>Product name</h3>
+        <p>Coming soon ..</p>
+    </div>
 
     <script>
         let products = [];
@@ -49,7 +113,7 @@
             const brandName = document.getElementById('brandName').value;
             const packetSize = parseFloat(document.getElementById('packetSize').value);
             const unit = document.getElementById('unit').value;
-            const packetPrice = parseFloat(document.getElementById('packetPrice').value);            
+            const packetPrice = parseFloat(document.getElementById('packetPrice').value);
 
             // Calculate price per kg
             let pricePerUnit;
@@ -72,9 +136,9 @@
                 compareUnit = 'tk'
             }
 
-            let pricePerUnitWithCompareUnit = pricePerUnit.toFixed(2) + "/" + compareUnit;           
+            let pricePerUnitWithCompareUnit = pricePerUnit.toFixed(2) + "/" + compareUnit;
             let packetPriceFix = packetPrice.toFixed(2);
-            const packetSizeWithUnit = packetSize + " " + unit;          
+            const packetSizeWithUnit = packetSize + " " + unit;
 
             // Store product information in array
             products.push({
@@ -91,13 +155,13 @@
 
 
             productEntry.innerHTML = `<div class="box" onclick="removeProduct(this)">
-                                        <div class="brand-name">${brandName}</div>
-                                        <div class="product-name">${productName}</div>
-                                        <div class="product-name">${productNameEst}</div>                                                
-                                        <div class="price-details">€${packetPriceFix}</div>
-                                        <div class="pack-details">${packetSizeWithUnit}</div>
-                                        <div class="price-per-unit">€${pricePerUnitWithCompareUnit}</div>
-                                    </div>`;
+                                <div class="brand-name">${brandName}</div>
+                                <div class="product-name">${productName}</div>
+                                <div class="product-name">${productNameEst}</div>                                                
+                                <div class="price-details">€${packetPriceFix}</div>
+                                <div class="pack-details">${packetSizeWithUnit}</div>
+                                <div class="price-per-unit">€${pricePerUnitWithCompareUnit}</div>
+                            </div>`;
 
             // Append product entry to product list
             document.getElementById('productList').appendChild(productEntry);
@@ -128,8 +192,8 @@
             // Create printable area
             let printWindow = window.open('', '_blank');
             printWindow.document.write(`<html><head><title>Product Labels</title>
-                <link rel="stylesheet" href="style.css">
-                </head><body>`);
+        <link rel="stylesheet" href="style.css">
+        </head><body>`);
             printWindow.document.write('');
             printWindow.document.write('<div class="container">' + printableContent + '</div>');
             printWindow.document.write('</body></html>');
@@ -138,7 +202,26 @@
             printWindow.document.close();
             printWindow.print();
         }
+
+        function fillBrandNameStorage() {
+
+
+        }
+        function openCity(evt, cityName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
     </script>
+
 </body>
 
 </html>
