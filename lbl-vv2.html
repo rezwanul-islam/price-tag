@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suggestion App</title>
+  <style>
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    input[type="text"] {
+      width: 70%;
+      padding: 10px;
+      margin-right: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 5px;
+      cursor: pointer;
+    }
+
+    li:hover {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Suggestion App</h1>
+    <input type="text" id="textInput" placeholder="Enter item">
+    <button onclick="saveItem()">Save</button>
+    <div id="suggestionBox">
+      <h2>Suggestions</h2>
+      <ul id="suggestionList"></ul>
+    </div>
+  </div>
+
+  <script>
+    // Retrieve suggestions from local storage if available
+    let suggestions = JSON.parse(localStorage.getItem('suggestions')) || [];
+
+    // Display suggestions
+    function displaySuggestions() {
+      const suggestionList = document.getElementById('suggestionList');
+      suggestionList.innerHTML = '';
+      suggestions.forEach(suggestion => {
+        const li = document.createElement('li');
+        li.textContent = suggestion;
+        li.addEventListener('click', () => {
+          document.getElementById('textInput').value = suggestion;
+        });
+        suggestionList.appendChild(li);
+      });
+    }
+
+    // Save item and update suggestions
+    function saveItem() {
+      const inputText = document.getElementById('textInput').value.trim();
+      if (inputText !== '') {
+        suggestions.push(inputText);
+        localStorage.setItem('suggestions', JSON.stringify(suggestions));
+        displaySuggestions();
+        document.getElementById('textInput').value = ''; // Clear input field
+      }
+    }
+
+    // Display initial suggestions
+    displaySuggestions();
+
+    // Listen for input events to show suggestions
+    document.getElementById('textInput').addEventListener('input', function() {
+      const inputText = this.value.trim();
+      const filteredSuggestions = suggestions.filter(suggestion =>
+        suggestion.toLowerCase().startsWith(inputText.toLowerCase())
+      );
+      displayFilteredSuggestions(filteredSuggestions);
+    });
+
+    // Display filtered suggestions
+    function displayFilteredSuggestions(filteredSuggestions) {
+      const suggestionList = document.getElementById('suggestionList');
+      suggestionList.innerHTML = '';
+      filteredSuggestions.forEach(suggestion => {
+        const li = document.createElement('li');
+        li.textContent = suggestion;
+        li.addEventListener('click', () => {
+          document.getElementById('textInput').value = suggestion;
+        });
+        suggestionList.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>

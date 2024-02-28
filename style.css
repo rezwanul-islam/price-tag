@@ -1,0 +1,54 @@
+/* Define styles for the container div */
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: auto;
+    border: 1px dotted black;
+    /* Use flexbox layout */
+}
+
+/* Define styles for the individual divs */
+.box {
+    width: 167px;
+    /* Set a fixed width for each div */
+    min-height: 120px;
+    background-color: #fff;
+    border: 1px solid black;
+    margin: 4px 5px;
+    position: relative;
+    /* Add some margin between divs */
+}
+
+.product-name {
+    font-size: 15px;
+    font-weight: bold;
+    margin: 0px 0px 5px 5px;
+    text-align: left;
+}
+
+.brand-name {
+    font-size: 12px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.pack-details {
+    font-size: 15px;
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+}
+
+.price-details {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.price-per-unit {
+    font-size: 15px;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}

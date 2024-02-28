@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Price Labels</title>    
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h2>Price Labels For Shelves</h2>
+
+    <label for="brandName">Brand Name:</label>
+    <input type="text" id="brandName"><br><br>
+
+    <label for="productName">Product Name (Line 1):</label>
+    <input type="text" id="productName"><br><br>
+
+    <label for="productNameEst">Product Name (Line 2):</label>
+    <input type="text" id="productNameEst"><br><br>
+
+    <label for="packetSize">Packet Size:</label>
+    <input type="number" id="packetSize">
+    <select id="unit">
+        <option value="gm">gm</option>
+        <option value="kg">kg</option>
+        <option value="ltr">ltr</option>
+        <option value="tk">tk</option>
+    </select><br><br>
+
+    <label for="packetPrice">Packet Price:</label>
+    <input type="number" id="packetPrice"><br><br>
+
+    <button onclick="saveProduct()">Save Product</button>
+    <button onclick="printLabels()">Print Labels</button>
+    <br><br>
+
+    <div class="container" id="productList"></div>
+
+    <script>
+        let products = [];
+
+        function saveProduct() {
+            // Get input values
+            const productName = document.getElementById('productName').value;
+            const productNameEst = document.getElementById('productNameEst').value;
+            const brandName = document.getElementById('brandName').value;
+            const packetSize = parseFloat(document.getElementById('packetSize').value);
+            const unit = document.getElementById('unit').value;
+            const packetPrice = parseFloat(document.getElementById('packetPrice').value);
+            const packetSizeWithUnit = packetSize + " " + unit;
+
+            // Calculate price per kg
+            let pricePerUnit;
+            if (unit === 'kg') {
+                pricePerUnit = (packetPrice / packetSize).toFixed(2);
+            } else if (unit === 'gm') {
+                pricePerUnit = ((packetPrice / packetSize) * 1000).toFixed(2);
+            } else if (unit === 'ltr') {
+                pricePerUnit = (packetPrice / packetSize).toFixed(2);
+            } else if (unit === 'tk') {
+                pricePerUnit = (packetPrice / packetSize).toFixed(2);
+            }
+
+            let pricePerUnit_2;
+            if (unit === 'kg' || unit === 'gm') {
+                pricePerUnit_2 = pricePerUnit + "/kg";
+            } else if (unit === 'ltr') {
+                pricePerUnit_2 = pricePerUnit + "/ltr";
+            } else if (unit === 'tk') {
+                pricePerUnit_2 = pricePerUnit + "/tk";
+            }
+
+
+            // Store product information in array
+            products.push({
+                productName: productName,
+                productNameEst: productNameEst,
+                brandName: brandName,
+                packetSize: packetSizeWithUnit,
+                packetPrice: packetPrice,
+                pricePerUnit: pricePerUnit_2
+            });
+
+            // Display product entry
+            const productEntry = document.createElement('div');
+
+
+            productEntry.innerHTML = `<div class="box" onclick="removeProduct(this)">
+                                        <div class="brand-name">${brandName}</div>
+                                        <div class="product-name">${productName}</div>
+                                        <div class="product-name">${productNameEst}</div>                                                
+                                        <div class="price-details">€${packetPrice}</div>
+                                        <div class="pack-details">${packetSizeWithUnit}</div>
+                                        <div class="price-per-unit">€${pricePerUnit_2}</div>
+                                    </div>`;
+
+            // Append product entry to product list
+            document.getElementById('productList').appendChild(productEntry);
+
+            // Clear input fields
+            document.getElementById('productName').value = '';
+            document.getElementById('productNameEst').value = '';
+            document.getElementById('brandName').value = '';
+            document.getElementById('packetSize').value = '';
+            document.getElementById('packetPrice').value = '';
+        }
+
+        function removeProduct(button) {
+            // Get the parent node (product entry) and remove it
+            const productEntry = button.parentNode;
+            productEntry.parentNode.removeChild(productEntry);
+
+            // Remove the corresponding product from the array
+            const index = Array.from(productEntry.parentNode.children).indexOf(productEntry);
+            products.splice(index, 1);
+        }
+
+        function printLabels() {
+
+            var printableContent = document.getElementById('productList').innerHTML;
+
+            console.log(printableContent);
+            // Create printable area
+            let printWindow = window.open('', '_blank');
+            printWindow.document.write(`<html><head><title>Product Labels</title>
+                <link rel="stylesheet" href="style.css">
+                </head><body>`);
+            printWindow.document.write('');
+            printWindow.document.write('<div class="container">' + printableContent + '</div>');
+            printWindow.document.write('</body></html>');
+
+            // Close the print window after printing
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
+</body>
+
+</html>
