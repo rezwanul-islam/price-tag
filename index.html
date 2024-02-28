@@ -49,8 +49,7 @@
             const brandName = document.getElementById('brandName').value;
             const packetSize = parseFloat(document.getElementById('packetSize').value);
             const unit = document.getElementById('unit').value;
-            const packetPrice = parseFloat(document.getElementById('packetPrice').value);
-            const packetSizeWithUnit = packetSize + " " + unit;
+            const packetPrice = parseFloat(document.getElementById('packetPrice').value);            
 
             // Calculate price per kg
             let pricePerUnit;
@@ -75,8 +74,7 @@
 
             let pricePerUnitWithCompareUnit = pricePerUnit.toFixed(2) + "/" + compareUnit;           
             let packetPriceFix = packetPrice.toFixed(2);
-
-            console.log(packetPrice.toFixed(2));
+            const packetSizeWithUnit = packetSize + " " + unit;          
 
             // Store product information in array
             products.push({
