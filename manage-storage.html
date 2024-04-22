@@ -2,96 +2,95 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Local Storage Example</title>
-  <style>
-    body {
-      font-family: Arial;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Storage Example</title>
+    <style>
+        body {
+            font-family: Arial;
+        }
 
-    .item-container {
-      display: flex;
-      align-items: center;
-      margin-bottom: 5px;
-    }
+        .item-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
 
-    .remove-icon {
-      cursor: pointer;
-      margin-left: 10px;
-    }
+        .remove-icon {
+            cursor: pointer;
+            margin-left: 10px;
+        }
 
-    .item-separator {
-      border: 1px solid black;
-      margin-bottom: 20px;
-    }
-  </style>
+        .item-separator {
+            border-bottom: 1px solid black;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 
 <body>
-  <h2>Manage Local Storage</h2>
-  <div class="item-separator">
-    <b>Brand Name</b>
-    <div id="itemListBrandName"></div>
-  </div>
+    <h2>Manage Local Storage</h2>
+    <a style="margin-left: 500px;" href="./index.html">Home</a>
+    
+    <div>
+        <span style="text-decoration: underline;">Brand Name:</span>
+        <div id="itemListBrandName" class="item-separator"></div>
+    </div>
 
-  <div class="item-separator">
-    <b>Product Name</b>
-    <div id="itemListProductName"></div>
-  </div>
+    <div>
+        <span style="text-decoration: underline;">Product Name:</span>
+        <div id="itemListProductName" class="item-separator"></div>
+    </div>
 
-  <div class="item-separator">
-    <b>Product Name (Est)</b>
-    <div id="itemListProductNameEst"></div>
-  </div>
+    <div>
+        <span style="text-decoration: underline;">Product Name (Est):</span>
+        <div id="itemListProductNameEst" class="item-separator"></div>
+    </div>
 
-  <script>
+    <script>
 
-    // Function to delete item from local storage
-    function deleteItem(localStorageName, itemList, index) {
-      var items = JSON.parse(localStorage.getItem(localStorageName)) || [];
-      items.splice(index, 1);
-      localStorage.setItem(localStorageName, JSON.stringify(items));
-      displayItems(localStorageName, itemList);
-    }
+        // Function to delete item from local storage
+        function deleteItem(storageName, dataListView, index) {
+            var items = JSON.parse(localStorage.getItem(storageName)) || [];
+            items.splice(index, 1);
+            localStorage.setItem(storageName, JSON.stringify(items));
+            displayItems(storageName, dataListView);
+        }
 
-    // Function to display items in the HTML
-    function displayItems(localStorageName, itemListDiv) {
+        // Function to display items in the HTML
+        function displayItems(storageName, dataListView) {
+            var itemList = document.getElementById(dataListView);
+            itemList.innerHTML = '';
 
-      console.log(itemListDiv);
+            var items = JSON.parse(localStorage.getItem(storageName)) || [];
 
-      var itemList = document.getElementById(itemListDiv);
-      itemList.innerHTML = '';
+            items.forEach(function (item, index) {
+                var itemContainer = document.createElement('div');
+                itemContainer.classList.add('item-container');
 
-      var items = JSON.parse(localStorage.getItem(localStorageName)) || [];
+                var itemName = document.createElement('span');
+                itemName.textContent = item;
 
-      items.forEach(function (item, index) {
-        var itemContainer = document.createElement('div');
-        itemContainer.classList.add('item-container');
+                var removeIcon = document.createElement('span');
+                removeIcon.textContent = '❌';
+                removeIcon.classList.add('remove-icon');
+                removeIcon.onclick = function () {
+                    deleteItem(storageName, dataListView, index);
+                };
 
-        var itemName = document.createElement('span');
-        itemName.textContent = item;
+                itemContainer.appendChild(itemName);
+                itemContainer.appendChild(removeIcon);
+                itemList.appendChild(itemContainer);
+            });
+        }
 
-        var removeIcon = document.createElement('span');
-        removeIcon.textContent = '❌';
-        removeIcon.classList.add('remove-icon');
-        removeIcon.onclick = function () {
-          deleteItem(localStorageName, itemList, index);
+        // Display items when the page loads
+        window.onload = function () {
+            displayItems('brandNameStorage', 'itemListBrandName');
+            displayItems('productNameStorage', 'itemListProductName');
+            displayItems('productNameEstStorage', 'itemListProductNameEst');
         };
-
-        itemContainer.appendChild(itemName);
-        itemContainer.appendChild(removeIcon);
-        itemList.appendChild(itemContainer);
-      });
-    }
-
-    // Display items when the page loads
-    window.onload = function () {
-      displayItems('brandNameStorage', 'itemListBrandName');
-      displayItems('productNameStorage', 'itemListProductName');
-      displayItems('productNameEstStorage', 'itemListProductNameEst');
-    };
-  </script>
+    </script>
 
 </body>
 
