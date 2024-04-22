@@ -49,16 +49,15 @@
             items.push(inputText);
             localStorage.setItem('items', JSON.stringify(items));
             displayItems('itemListBrandName');
-            displayItems('itemListProductName');
             document.getElementById('inputText').value = ''; // Clear the input field after saving
         }
 
         // Function to delete item from local storage
-        function deleteItem(index) {
+        function deleteItem(dataListView, index) {
             var items = JSON.parse(localStorage.getItem('items')) || [];
             items.splice(index, 1);
             localStorage.setItem('items', JSON.stringify(items));
-            displayItems('itemListBrandName');
+            displayItems(dataListView);
         }
 
         // Function to display items in the HTML
@@ -79,7 +78,7 @@
                 removeIcon.textContent = '❌';
                 removeIcon.classList.add('remove-icon');
                 removeIcon.onclick = function () {
-                    deleteItem(index);
+                    deleteItem(dataListView, index);
                 };
 
                 itemContainer.appendChild(itemName);
