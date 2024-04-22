@@ -29,43 +29,26 @@
 </head>
 
 <body>
-    <h2>Manage Local Storage</h2>
-
-    <input type="text" id="inputText">
-    <button onclick="saveItem()">Save</button>
+    <h2>Manage Local Storage</h2> 
 
     <div id="itemListBrandName" class="item-separator"></div>
 
-    <script>
-        // Function to save item to local storage
-        function saveItem() {
-            var inputText = document.getElementById('inputText').value.trim();
-            if (inputText === '') {
-                alert('Please enter some text.');
-                return;
-            }
-
-            var items = JSON.parse(localStorage.getItem('items')) || [];
-            items.push(inputText);
-            localStorage.setItem('items', JSON.stringify(items));
-            displayItems('itemListBrandName');
-            document.getElementById('inputText').value = ''; // Clear the input field after saving
-        }
+    <script>       
 
         // Function to delete item from local storage
-        function deleteItem(dataListView, index) {
-            var items = JSON.parse(localStorage.getItem('items')) || [];
+        function deleteItem(storageName, dataListView, index) {
+            var items = JSON.parse(localStorage.getItem(storageName)) || [];
             items.splice(index, 1);
-            localStorage.setItem('items', JSON.stringify(items));
-            displayItems(dataListView);
+            localStorage.setItem(storageName, JSON.stringify(items));
+            displayItems(storageName, dataListView);
         }
 
         // Function to display items in the HTML
-        function displayItems(dataListView) {
+        function displayItems(storageName, dataListView) {
             var itemList = document.getElementById(dataListView);
             itemList.innerHTML = '';
 
-            var items = JSON.parse(localStorage.getItem('items')) || [];
+            var items = JSON.parse(localStorage.getItem(storageName)) || [];
 
             items.forEach(function (item, index) {
                 var itemContainer = document.createElement('div');
@@ -78,7 +61,7 @@
                 removeIcon.textContent = '❌';
                 removeIcon.classList.add('remove-icon');
                 removeIcon.onclick = function () {
-                    deleteItem(dataListView, index);
+                    deleteItem(storageName, dataListView, index);
                 };
 
                 itemContainer.appendChild(itemName);
@@ -89,7 +72,7 @@
 
         // Display items when the page loads
         window.onload = function () {
-            displayItems('itemListBrandName');
+            displayItems('brandNameStorage', 'itemListBrandName');
         };
     </script>
 
