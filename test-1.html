@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Storage Example</title>
+    <style>
+        body {
+            font-family: Arial;
+        }
+
+        .item-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .remove-icon {
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .item-separator {
+            border: 1px solid black;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Manage Local Storage</h2>
+
+    <input type="text" id="inputText">
+    <button onclick="saveItem()">Save</button>
+
+    <div id="itemListBrandName" class="item-separator"></div>
+
+    <script>
+        // Function to save item to local storage
+        function saveItem() {
+            var inputText = document.getElementById('inputText').value.trim();
+            if (inputText === '') {
+                alert('Please enter some text.');
+                return;
+            }
+
+            var items = JSON.parse(localStorage.getItem('items')) || [];
+            items.push(inputText);
+            localStorage.setItem('items', JSON.stringify(items));
+            displayItems('itemListBrandName');
+            displayItems('itemListProductName');
+            document.getElementById('inputText').value = ''; // Clear the input field after saving
+        }
+
+        // Function to delete item from local storage
+        function deleteItem(index) {
+            var items = JSON.parse(localStorage.getItem('items')) || [];
+            items.splice(index, 1);
+            localStorage.setItem('items', JSON.stringify(items));
+            displayItems('itemListBrandName');
+        }
+
+        // Function to display items in the HTML
+        function displayItems(dataListView) {
+            var itemList = document.getElementById(dataListView);
+            itemList.innerHTML = '';
+
+            var items = JSON.parse(localStorage.getItem('items')) || [];
+
+            items.forEach(function (item, index) {
+                var itemContainer = document.createElement('div');
+                itemContainer.classList.add('item-container');
+
+                var itemName = document.createElement('span');
+                itemName.textContent = item;
+
+                var removeIcon = document.createElement('span');
+                removeIcon.textContent = '❌';
+                removeIcon.classList.add('remove-icon');
+                removeIcon.onclick = function () {
+                    deleteItem(index);
+                };
+
+                itemContainer.appendChild(itemName);
+                itemContainer.appendChild(removeIcon);
+                itemList.appendChild(itemContainer);
+            });
+        }
+
+        // Display items when the page loads
+        window.onload = function () {
+            displayItems('itemListBrandName');
+        };
+    </script>
+
+</body>
+
+</html>

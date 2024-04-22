@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Local Storage Example</title>
+  <style>
+    body {
+      font-family: Arial;
+    }
+
+    .item-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .remove-icon {
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .item-separator {
+      border: 1px solid black;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Manage Local Storage</h2>
+  <div class="item-separator">
+    <b>Brand Name</b>
+    <div id="itemListBrandName"></div>
+  </div>
+
+  <div class="item-separator">
+    <b>Product Name</b>
+    <div id="itemListProductName"></div>
+  </div>
+
+  <div class="item-separator">
+    <b>Product Name (Est)</b>
+    <div id="itemListProductNameEst"></div>
+  </div>
+
+  <script>
+
+    // Function to delete item from local storage
+    function deleteItem(localStorageName, itemList, index) {
+      var items = JSON.parse(localStorage.getItem(localStorageName)) || [];
+      items.splice(index, 1);
+      localStorage.setItem(localStorageName, JSON.stringify(items));
+      displayItems(localStorageName, itemList);
+    }
+
+    // Function to display items in the HTML
+    function displayItems(localStorageName, itemListDiv) {
+
+      console.log(itemListDiv);
+
+      var itemList = document.getElementById(itemListDiv);
+      itemList.innerHTML = '';
+
+      var items = JSON.parse(localStorage.getItem(localStorageName)) || [];
+
+      items.forEach(function (item, index) {
+        var itemContainer = document.createElement('div');
+        itemContainer.classList.add('item-container');
+
+        var itemName = document.createElement('span');
+        itemName.textContent = item;
+
+        var removeIcon = document.createElement('span');
+        removeIcon.textContent = '❌';
+        removeIcon.classList.add('remove-icon');
+        removeIcon.onclick = function () {
+          deleteItem(localStorageName, itemList, index);
+        };
+
+        itemContainer.appendChild(itemName);
+        itemContainer.appendChild(removeIcon);
+        itemList.appendChild(itemContainer);
+      });
+    }
+
+    // Display items when the page loads
+    window.onload = function () {
+      displayItems('brandNameStorage', 'itemListBrandName');
+      displayItems('productNameStorage', 'itemListProductName');
+      displayItems('productNameEstStorage', 'itemListProductNameEst');
+    };
+  </script>
+
+</body>
+
+</html>

@@ -9,99 +9,47 @@
     <style>
         body {
             font-family: Arial;
-        }
-
-        /* Style the tab */
-        .tab {
-            overflow: hidden;
-            border: 1px solid #ccc;
-            background-color: #f1f1f1;
-        }
-
-        /* Style the buttons inside the tab */
-        .tab button {
-            background-color: inherit;
-            float: left;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            padding: 14px 16px;
-            transition: 0.3s;
-            font-size: 17px;
-        }
-
-        /* Change background color of buttons on hover */
-        .tab button:hover {
-            background-color: #ddd;
-        }
-
-        /* Create an active/current tablink class */
-        .tab button.active {
-            background-color: #ccc;
-        }
-
-        /* Style the tab content */
-        .tabcontent {
-            display: none;
-            padding: 6px 12px;
-            border: 1px solid #ccc;
-            border-top: none;
-        }
+        }        
     </style>
 </head>
 
 <body>
 
     <h2>Price Tag</h2>
-    <p>Enter product details and print</p>
+    <p>Enter product details and print</p>  
 
-    <div class="tab">
-        <button class="tablinks" onclick="openCity(event, 'priceTag')">Price Tag</button>
-        <button class="tablinks" onclick="openCity(event, 'manageBrand')">Manage Brand Name</button>
-        <button class="tablinks" onclick="openCity(event, 'manageProduct')">Manage Product</button>
-    </div>
+    <label for="brandName">Brand Name:</label>
+    <input type="text" id="brandName" list="dataListBrandName"><br><br>
 
-    <div id="priceTag" class="tabcontent">
-        <h2>Price Labels For Shelves</h2>
+    <label for="productName">Product Name:</label>
+    <input type="text" id="productName" list="dataListproductName"><br><br>
 
-        <label for="brandName">Brand Name:</label>
-        <input type="text" id="brandName"><br><br>
+    <label for="productNameEst">Product Name (Est):</label>
+    <input type="text" id="productNameEst" list="dataListproductNameEst"><br><br>
 
-        <label for="productName">Product Name (Line 1):</label>
-        <input type="text" id="productName"><br><br>
+    <label for="packetSize">Packet Size:</label>
+    <input type="number" id="packetSize">
+    <select id="unit">
+        <option value="gm">gm</option>
+        <option value="kg">kg</option>
+        <option value="ml">ml</option>
+        <option value="ltr">ltr</option>
+        <option value="tk">tk</option>
+    </select><br><br>
 
-        <label for="productNameEst">Product Name (Line 2):</label>
-        <input type="text" id="productNameEst"><br><br>
+    <label for="packetPrice">Packet Price:</label>
+    <input type="number" id="packetPrice"><br><br>
 
-        <label for="packetSize">Packet Size:</label>
-        <input type="number" id="packetSize">
-        <select id="unit">
-            <option value="gm">gm</option>
-            <option value="kg">kg</option>
-            <option value="ml">ml</option>
-            <option value="ltr">ltr</option>
-            <option value="tk">tk</option>
-        </select><br><br>
+    <button onclick="saveProduct()">Save Product</button>
+    <button onclick="printLabels()">Print Labels</button>
+    <br><br>
 
-        <label for="packetPrice">Packet Price:</label>
-        <input type="number" id="packetPrice"><br><br>
+    <div class="container" id="productList"></div>
 
-        <button onclick="saveProduct()">Save Product</button>
-        <button onclick="printLabels()">Print Labels</button>
-        <br><br>
 
-        <div class="container" id="productList"></div>
-    </div>
-
-    <div id="manageBrand" class="tabcontent">
-        <h3>Brand name</h3>
-        <p>Coming soon ..</p>
-    </div>
-
-    <div id="manageProduct" class="tabcontent">
-        <h3>Product name</h3>
-        <p>Coming soon ..</p>
-    </div>
+    <datalist id="dataListBrandName"></datalist>
+    <datalist id="dataListproductName"></datalist>
+    <datalist id="dataListproductNameEst"></datalist>
 
     <script>
         let products = [];
@@ -166,6 +114,11 @@
             // Append product entry to product list
             document.getElementById('productList').appendChild(productEntry);
 
+            // save name in local storage
+            saveBrandName('brandName', 'dataListBrandName', 'brandNameStorage');
+            saveBrandName('productName', 'dataListproductName', 'productNameStorage');
+            saveBrandName('productNameEst', 'dataListproductNameEst', 'productNameEstStorage');
+
             // Clear input fields
             document.getElementById('productName').value = '';
             document.getElementById('productNameEst').value = '';
@@ -203,23 +156,52 @@
             printWindow.print();
         }
 
-        function fillBrandNameStorage() {
+
+        // ---
+
+        function saveBrandName(inputFieldId, dataListId, localStorageName) {
+
+            var input = document.getElementById(inputFieldId);
+            var name = input.value.trim();
+
+            // Check if name is not empty
+            if (name !== '') {
+                var savedNames = JSON.parse(localStorage.getItem(localStorageName)) || [];
+
+                // Check if the name already exists in the array
+                if (!savedNames.includes(name)) {
+                    savedNames.push(name);
+                    localStorage.setItem(localStorageName, JSON.stringify(savedNames));
+                    populateDatalist(dataListId, localStorageName); // Populate the datalist after saving
+                }
+            }
+        }
+
+        // Function to populate the datalist with data from localStorage
+        function populateDatalist(dataListId, localStorageName) {
+            var datalist = document.getElementById(dataListId);
+            var savedNames = JSON.parse(localStorage.getItem(localStorageName)) || [];
+
+            // Clear existing options
+            datalist.innerHTML = '';
+
+            // Add saved names to the datalist
+            savedNames.forEach(function (name) {
+                var option = document.createElement('option');
+                option.value = name;
+                datalist.appendChild(option);
+            });
+        }
 
 
-        }
-        function openCity(evt, cityName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-            document.getElementById(cityName).style.display = "block";
-            evt.currentTarget.className += " active";
-        }
+
+        // Load saved names when the page loads
+        window.onload = function () {
+            populateDatalist('dataListBrandName', 'brandNameStorage');
+            populateDatalist('dataListproductName', 'productNameStorage');
+            populateDatalist('dataListproductNameEst', 'productNameEstStorage');
+        };
+
     </script>
 
 </body>
